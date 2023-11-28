@@ -3,11 +3,11 @@ package clases;
 public class mainPrueba {
 	
 	public static void main(String[] args) {
-		Animal animal1= new Animal("a","a",1,null, Genero.HEMBRA, null);
-		Animal animal2= new Animal("a","a",1,null, Genero.HEMBRA, null);
-		Animal animal3= new Animal("a","a",1,null, Genero.HEMBRA, null);
-		Animal animal4= new Animal("a","a",1,null, Genero.HEMBRA, null);
-		Animal animal5= new Animal("a","a",1,null, Genero.HEMBRA, null);
-			System.out.println(String.valueOf(animal5.getCod()));
+		Animal animal1= new Animal("Rocky",Especie.PERRO,"Pastor belga",1, Genero.HEMBRA, null, null);
+		Animal animal2= new Animal("Paco",Especie.AVE,"Loro",2, Genero.HEMBRA, null,null);
+		Animal animal3= new Animal("Michi",Especie.GATO,"Gato Persa",1, Genero.HEMBRA, null,null);
+		Animal animal4= new Animal("Gozilla",Especie.REPTIL,"Gecko",3, Genero.HEMBRA, null, null);
+		
+		
 	}
 }

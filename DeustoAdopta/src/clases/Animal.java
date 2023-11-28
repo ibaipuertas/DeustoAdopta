@@ -1,5 +1,7 @@
 package clases;
 
+import java.awt.Image;
+
 import javax.swing.ImageIcon;
 
 public class Animal {
@@ -7,22 +9,40 @@ public class Animal {
 	private static int contadorAnimales = 0;
 	private int cod;
 	private String nombre;
-	private String tipo;
+	private Especie especie;
+	private String raza;
 	private int edad;
-	private ImageIcon foto;
 	private Genero genero;
 	private Usuario propietario;
+	private Image fotoAnimal;
 	
-	public Animal(String nombre, String tipo, int edad, ImageIcon foto, Genero genero, Usuario propietario) {
+	public Animal(String nombre,Especie especie, String raza, int edad, Genero genero, Usuario propietario, Image fotoAnimal) {
 		super();
 		this.cod = contadorAnimales;
 		contadorAnimales = contadorAnimales +1;
 		this.nombre = nombre;
-		this.tipo = tipo;
+		this.especie = especie;
+		this.raza = raza;
 		this.edad = edad;
-		this.foto = foto;
 		this.genero = genero;
 		this.propietario = propietario;
+		this.fotoAnimal = fotoAnimal;
+	}
+
+	public Especie getEspecie() {
+		return especie;
+	}
+
+	public void setEspecie(Especie especie) {
+		this.especie = especie;
+	}
+
+	public Image getFotoAnimal() {
+		return fotoAnimal;
+	}
+
+	public void setFotoAnimal(Image fotoAnimal) {
+		this.fotoAnimal = fotoAnimal;
 	}
 
 	public int getCod() {
@@ -41,12 +61,12 @@ public class Animal {
 		this.nombre = nombre;
 	}
 
-	public String getTipo() {
-		return tipo;
+	public String getRaza() {
+		return raza;
 	}
 
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
+	public void setRaza(String tipo) {
+		this.raza = tipo;
 	}
 
 	public int getEdad() {
@@ -55,14 +75,6 @@ public class Animal {
 
 	public void setEdad(int edad) {
 		this.edad = edad;
-	}
-
-	public ImageIcon getFoto() {
-		return foto;
-	}
-
-	public void setFoto(ImageIcon foto) {
-		this.foto = foto;
 	}
 
 	public Genero getGenero() {
@@ -81,7 +93,9 @@ public class Animal {
 		this.propietario = propietario;
 	}
 	
-	
+	public String toString() {
+		return especie + raza + propietario.toString() ;
+	}
 	
 	
 }

@@ -115,6 +115,18 @@ public class VentanaMiPerfil extends JFrame{
 			dispose();
 		});
 		
+		bMisAdopciones.addActionListener((e)->{
+			VentanaMisAdopciones vma= new VentanaMisAdopciones(principal,usuario);
+			vma.setVisible(true);
+			dispose();
+		});
+		
+		bMisAnimalesEnAdopcion.addActionListener((e)->{
+			VentanaMisDadosEnAdopcion vda= new VentanaMisDadosEnAdopcion(principal,usuario);
+			vda.setVisible(true);
+			dispose();
+		});
+		
 	}
 	
 	

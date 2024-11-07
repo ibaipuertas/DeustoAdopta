@@ -1,10 +1,11 @@
 package domain;
 
 import java.awt.Image;
+import java.util.Objects;
 
 import javax.swing.ImageIcon;
 
-public class Animal {
+public class Animal implements Comparable<Animal>{
 	
 	private static int contadorAnimales = 0;
 	private int cod;
@@ -80,6 +81,7 @@ public class Animal {
 	public Genero getGenero() {
 		return genero;
 	}
+	
 
 	public void setGenero(Genero genero) {
 		this.genero = genero;
@@ -94,8 +96,34 @@ public class Animal {
 	}
 	
 	public String toString() {
-		return especie + raza + propietario.toString() ;
+		return especie +" "+ raza +" "+ propietario.toString() ;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(cod, edad, especie, fotoAnimal, genero, nombre, propietario, raza);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Animal other = (Animal) obj;
+		return cod == other.cod && edad == other.edad && especie == other.especie
+				&& Objects.equals(fotoAnimal, other.fotoAnimal) && genero == other.genero
+				&& Objects.equals(nombre, other.nombre) && Objects.equals(propietario, other.propietario)
+				&& Objects.equals(raza, other.raza);
 	}
 	
+	public int compareTo(Animal a) {
+		if (this.cod == a.cod) {
+			return 0;
+		}
+		else return 1;
+	}
 	
 }

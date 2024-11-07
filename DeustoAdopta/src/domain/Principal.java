@@ -13,7 +13,7 @@ import java.util.TreeSet;
 
 public class Principal {
 	
-	private static Set<Animal> animales = new TreeSet<>();
+	private static ArrayList<Animal> animales = new ArrayList<>();
 	private static List<Usuario> usuarios = new ArrayList<>();
 	private static Map<Usuario, List<Animal>> adopciones = new TreeMap<>();
 	private static Map<Usuario, List<Animal>> adoptados = new TreeMap<>();
@@ -41,11 +41,11 @@ public class Principal {
 	
 	//GETTERS Y SETTERS
 
-	public static Set<Animal> getAnimales() {
+	public static ArrayList<Animal> getAnimales() {
 		return animales;
 	}
 
-	public static void setAnimales(Set<Animal> animales) {
+	public static void setAnimales(ArrayList<Animal> animales) {
 		Principal.animales = animales;
 	}
 

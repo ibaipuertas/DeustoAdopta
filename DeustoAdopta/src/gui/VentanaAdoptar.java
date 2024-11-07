@@ -165,19 +165,28 @@ public class VentanaAdoptar extends JFrame {
 
         // Se añaden los animales filtrados al modelo de datos
         for (Animal animal : listaAnimales) {
-            if (especieFiltro == null || especieFiltro == animal.getEspecie()) {
-                // Aquí se añade la ruta de la foto del animal
-                ImageIcon fotoIcon = new ImageIcon(getClass().getClassLoader().getResource("data/" + animal.getFotoAnimal()));
-                Image foto = fotoIcon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH); // Ajustamos la imagen al tamaño de la celda
-                modeloDatosAnimales.addRow(new Object[] {
-                    animal.getEspecie(),
-                    animal.getEdad(),
-                    animal.getGenero(),
-                    animal.getPropietario(),
-                    animal.getPropietario().getComunidadAutonoma(),
-                    new ImageIcon(foto) // La foto del animal como imagen en la columna correspondiente
-                });
+            String fotoNombre = animal.getFotoAnimal();
+            ImageIcon fotoIcon = null;
+
+            // Si el nombre de la foto es null, se asigna la foto predeterminada
+            if (fotoNombre == null || fotoNombre.isEmpty()) {
+                fotoIcon = new ImageIcon(getClass().getClassLoader().getResource("data/fotoDeustoAdopta.png"));
+            } else {
+                fotoIcon = new ImageIcon(getClass().getClassLoader().getResource("data/" + fotoNombre));
             }
+
+            // Ajustar el tamaño de la imagen
+            Image foto = fotoIcon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+
+            // Añadir fila a la tabla
+            modeloDatosAnimales.addRow(new Object[] {
+                animal.getEspecie(),
+                animal.getEdad(),
+                animal.getGenero(),
+                animal.getPropietario(),
+                animal.getPropietario().getComunidadAutonoma(),
+                new ImageIcon(foto) // Mostrar la imagen en la columna correspondiente
+            });
         }
 
         // Notificar a la tabla que el modelo de datos ha cambiado

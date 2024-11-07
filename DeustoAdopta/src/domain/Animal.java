@@ -15,9 +15,9 @@ public class Animal implements Comparable<Animal>{
 	private int edad;
 	private Genero genero;
 	private Usuario propietario;
-	private Image fotoAnimal;
+	private String fotoAnimal;
 	
-	public Animal(String nombre,Especie especie, String raza, int edad, Genero genero, Usuario propietario, Image fotoAnimal) {
+	public Animal(String nombre,Especie especie, String raza, int edad, Genero genero, Usuario propietario, String fotoAnimal) {
 		super();
 		this.cod = contadorAnimales;
 		contadorAnimales = contadorAnimales +1;
@@ -38,11 +38,11 @@ public class Animal implements Comparable<Animal>{
 		this.especie = especie;
 	}
 
-	public Image getFotoAnimal() {
+	public String getFotoAnimal() {
 		return fotoAnimal;
 	}
 
-	public void setFotoAnimal(Image fotoAnimal) {
+	public void setFotoAnimal(String fotoAnimal) {
 		this.fotoAnimal = fotoAnimal;
 	}
 

@@ -32,16 +32,16 @@ public class Main {
 		UsuarioPersona usuario5 = new UsuarioPersona("pedro.diaz@gmail.com", "mipass123", 644213987, ComunidadAutonoma.EUSKADI, "Calle Estrella, 8", "Pedro", "Díaz", "Puertas", 347434523);
 
 		// Usuario 1: Juan Pérez (Madrid)
-		Animal animal1 = new Animal("Max", Especie.PERRO, "Labrador", 3, Genero.MACHO, usuario1, null);
+		Animal animal1 = new Animal("Max", Especie.PERRO, "Labrador", 3, Genero.MACHO, usuario1, "fotoperro1.jpg");
 		Animal animal2 = new Animal("Luna", Especie.GATO, "Siames", 2, Genero.HEMBRA, usuario1, null);
 		Animal animal3 = new Animal("Kiwi", Especie.AVE, "Periquito", 1, Genero.MACHO, usuario1, null);
 		Animal animal4 = new Animal("Coco", Especie.HURON, "Doméstico", 3, Genero.MACHO, usuario1, null);
 		Animal animal5 = new Animal("Fluffy", Especie.ROEDOR, "Cobaya", 1, Genero.HEMBRA, usuario1, null);
 
 		// Usuario 2: María López (Cataluña)
-		Animal animal6 = new Animal("Charlie", Especie.PERRO, "Bulldog Francés", 4, Genero.MACHO, usuario2, null);
+		Animal animal6 = new Animal("Charlie", Especie.PERRO, "Bulldog Francés", 4, Genero.MACHO, usuario2, "fotoperro2.jpg");
 		Animal animal7 = new Animal("Nala", Especie.GATO, "Persa", 5, Genero.HEMBRA, usuario2, null);
-		Animal animal8 = new Animal("Goldie", Especie.PEZ, "Goldfish", 1, Genero.MACHO, usuario2, null);
+		Animal animal8 = new Animal("Goldie", Especie.PEZ, "Goldfish", 1, Genero.MACHO, usuario2, "fotopez1.jpg");
 		Animal animal9 = new Animal("Mango", Especie.AVE, "Canario", 2, Genero.MACHO, usuario2, null);
 		Animal animal10 = new Animal("Zorro", Especie.REPTIL, "Gecko", 3, Genero.MACHO, usuario2, null);
 

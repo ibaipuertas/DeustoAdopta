@@ -163,16 +163,16 @@ public class VentanaAdoptar extends JFrame {
     private void loadAnimales(Especie especieFiltro) {
         modeloDatosAnimales.setRowCount(0); // Limpiar los datos de la tabla
 
-        // Se añaden los animales filtrados al modelo de datos
         for (Animal animal : listaAnimales) {
             String fotoNombre = animal.getFotoAnimal();
-            ImageIcon fotoIcon = null;
+            ImageIcon fotoIcon;
 
-            // Si el nombre de la foto es null, se asigna la foto predeterminada
-            if (fotoNombre == null || fotoNombre.isEmpty()) {
-                fotoIcon = new ImageIcon(getClass().getClassLoader().getResource("data/fotoDeustoAdopta.png"));
+            // Intentar cargar la imagen del animal
+            if (fotoNombre == null || fotoNombre.isEmpty() || getClass().getClassLoader().getResource("imagenes/" + fotoNombre) == null) {
+                // Si no hay foto o la ruta es inválida, usa la imagen predeterminada
+                fotoIcon = new ImageIcon(getClass().getClassLoader().getResource("imagenes/logoDeustoAdopta.png"));
             } else {
-                fotoIcon = new ImageIcon(getClass().getClassLoader().getResource("data/" + fotoNombre));
+                fotoIcon = new ImageIcon(getClass().getClassLoader().getResource("imagenes/" + fotoNombre));
             }
 
             // Ajustar el tamaño de la imagen
@@ -189,7 +189,6 @@ public class VentanaAdoptar extends JFrame {
             });
         }
 
-        // Notificar a la tabla que el modelo de datos ha cambiado
         modeloDatosAnimales.fireTableDataChanged();
     }
 }

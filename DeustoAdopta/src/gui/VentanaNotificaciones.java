@@ -110,6 +110,8 @@ public class VentanaNotificaciones extends JFrame {
         // Cargar todas las solicitudes a una lista
         listaSolicitudes = principal.getSolicitudesAdopcion();
         
+
+        
         // Añadir las solicitudes recibidas y enviadas del usuario del login a sus listas correspondientes
         for (SolicitudAdopcion sA : listaSolicitudes) {
             if (sA.getUsuarioSolicitado().equals(usuario)) {
@@ -185,6 +187,24 @@ public class VentanaNotificaciones extends JFrame {
 
                 // Cambiar el estado de la solicitud y actualizar la tabla
                 solicitud.aceptarSolicitud();
+                
+                //Creo lista intermedia para no modificar mientras itero
+                ArrayList<SolicitudAdopcion> aL = (ArrayList<SolicitudAdopcion>)listaSolicitudesRecibidas.clone();
+                
+                //recorro las solicitudes recibidas y compruebo si involucran al animal que he dado en adopción, en tal caso las borro
+                for (SolicitudAdopcion sol :listaSolicitudesRecibidas) {
+                	if (sol.getAnimal().equals(solicitud.getAnimal())) {
+                		aL.remove(sol);
+                	}
+                }
+                //reconstruyo la lista de solicitudes recibidas con las solicitudes que me interesan
+                listaSolicitudesRecibidas.clear();
+                for (SolicitudAdopcion sA : aL) {
+                	listaSolicitudesRecibidas.add(sA);
+                }
+                
+                
+                solicitud.getAnimal().setPropietario(solicitud.getUsuarioSolicitante());
                 actualizarTablaSolicitudesRecibidas();
             }
         });

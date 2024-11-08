@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 public class Usuario implements Comparable<Usuario>{
 	
-	private ArrayList<Animal> animalesAdoptados;
-	private ArrayList<Animal> animalesEnAdopción;
 	private static int contadorUsuarios;
 	private int cod;
 	private String correoElectronico;
@@ -29,22 +27,6 @@ public class Usuario implements Comparable<Usuario>{
 	public Usuario(String correoElectronico, String contrasenia) {
 		this.correoElectronico = correoElectronico;
 		this.contrasenia = contrasenia;
-	}
-
-	public ArrayList<Animal> getAnimalesAdoptados() {
-		return animalesAdoptados;
-	}
-
-	public void setAnimalesAdoptados(ArrayList<Animal> animalesAdoptados) {
-		this.animalesAdoptados = animalesAdoptados;
-	}
-
-	public ArrayList<Animal> getAnimalesEnAdopción() {
-		return animalesEnAdopción;
-	}
-
-	public void setAnimalesEnAdopción(ArrayList<Animal> animalesEnAdopción) {
-		this.animalesEnAdopción = animalesEnAdopción;
 	}
 
 	public int getCod() {

@@ -16,7 +16,6 @@ public class Principal {
 	private static ArrayList<Animal> animales = new ArrayList<>();
 	private static List<Usuario> usuarios = new ArrayList<>();
 	private static ArrayList<SolicitudAdopcion> solicitudAdopcion = new ArrayList<>();
-	private static Map<Usuario, List<Animal>> adoptados = new TreeMap<>();
 	private static final String nomfichUsuarios = "src/data/DataUsuarios.csv";
 	
 	// CONSTRUCTOR
@@ -65,13 +64,7 @@ public class Principal {
 		Principal.solicitudAdopcion = adopciones;
 	}
 
-	public static Map<Usuario, List<Animal>> getAdoptados() {
-		return adoptados;
-	}
-
-	public static void setAdoptados(Map<Usuario, List<Animal>> adoptados) {
-		Principal.adoptados = adoptados;
-	}
+	
 	
 	
 	//METODOS PARA ANYADIR ELEMENTOS A LAS COLECCIONES
@@ -104,20 +97,7 @@ public class Principal {
 	}
 	
 	
-	
-	public static void imprimirAdoptados() {
-		for(Usuario u : adoptados.keySet()) {
-			System.out.println(u);
-			List<Animal> l = adoptados.get(u);
-			for(Animal a : l) {
-				System.out.println(a);
-			}
-			System.out.println("**********************************************");
-		}
-	}
-	
 	//METODO PARA BUSCAR USUARIO
-	
 	public static Usuario buscarUsuario(String correo) {
 		boolean enc = false;
 		int pos = 0;

@@ -14,6 +14,7 @@ import domain.Animal;
 import domain.Especie;
 import domain.Principal;
 import domain.Usuario;
+import domain.SolicitudAdopcion;
 
 public class VentanaAdoptar extends JFrame {
 
@@ -85,7 +86,7 @@ public class VentanaAdoptar extends JFrame {
                 return false; // Ninguna celda será editable
             }
         };
-        tablaAnimales.setRowHeight(60);
+        tablaAnimales.setRowHeight(100);
         scrollTablaAnimales = new JScrollPane(tablaAnimales);
         panelCentral.setLayout(new BorderLayout());
         panelCentral.setBorder(new EmptyBorder(30, 30, 0, 30));
@@ -100,7 +101,8 @@ public class VentanaAdoptar extends JFrame {
 
         // PANEL INFERIOR (BOTONES DE CANCELAR Y CONFIRMAR)
         JButton bCancelar = new JButton("Cancelar");
-        JButton bConfirmar = new JButton("Confirmar adopción");
+        
+        JButton bConfirmar = new JButton("Adoptar");
         panelInferior.add(bCancelar);
         panelInferior.add(bConfirmar);
 
@@ -111,51 +113,113 @@ public class VentanaAdoptar extends JFrame {
             dispose();
         });
 
-        // Configuración del renderizador de celdas para centrar texto y aplicar color por especie
-        tablaAnimales.setDefaultRenderer(Object.class, new TableCellRenderer() {
+        bConfirmar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = tablaAnimales.getSelectedRow();
+                
+                if (selectedRow != -1) {  // Comprobar si hay una fila seleccionada
+                    // Obtener el animal correspondiente a la fila seleccionada
+                    Animal animalSeleccionado = listaAnimales.get(selectedRow);
+
+                    // Mostrar el mensaje de confirmación
+                    int confirmacion = JOptionPane.showConfirmDialog(
+                        VentanaAdoptar.this,
+                        "¿Confirmar solicitud de adopción para el animal seleccionado?",
+                        "Confirmar Adopción",
+                        JOptionPane.YES_NO_OPTION
+                    );
+
+                    // Si el usuario confirma, crear la solicitud de adopción
+                    if (confirmacion == JOptionPane.YES_OPTION) {
+                        Usuario propietario = animalSeleccionado.getPropietario();
+                        
+                        // Crear la solicitud de adopción
+                        SolicitudAdopcion solicitud = new SolicitudAdopcion(usuario, propietario, animalSeleccionado);
+                        
+                        // Mostrar mensaje de éxito
+                        JOptionPane.showMessageDialog(
+                            VentanaAdoptar.this,
+                            "Solicitud de adopción creada exitosamente. \nSe ha enviado solicitud a: "+animalSeleccionado.getPropietario().getCorreoElectronico(),
+                            "Éxito",
+                            JOptionPane.INFORMATION_MESSAGE
+                        );
+
+                        // Aquí puedes agregar lógica adicional para manejar la solicitud, como guardarla o procesarla
+                    }
+                } else {
+                    // Mostrar mensaje si no se ha seleccionado ningún animal
+                    JOptionPane.showMessageDialog(
+                        VentanaAdoptar.this,
+                        "Por favor, seleccione un animal antes de confirmar la adopción.",
+                        "Advertencia",
+                        JOptionPane.WARNING_MESSAGE
+                    );
+                }
+            }
+        });
+        
+     // Configuración del renderizador de celdas para centrar texto y aplicar color por especie
+     // Configuración del renderizador para mostrar imágenes en la tabla
+        TableCellRenderer centeredRenderer = new TableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                JLabel cell = new JLabel(value == null ? "" : value.toString(), JLabel.CENTER); // Centrado
+                JLabel cell = new JLabel(value == null ? "" : value.toString(), JLabel.CENTER); // Centrado de texto
                 cell.setOpaque(true);
-                
-                // Colorear la fila según la especie del animal
-                Especie especie = (Especie) modeloDatosAnimales.getValueAt(row, 0); // Obtener especie en primera columna
-                if (especie != null) {
-                    switch (especie) {
-                        case PERRO:
-                            cell.setBackground(new Color(200, 230, 255)); // Color para perros
-                            break;
-                        case GATO:
-                            cell.setBackground(new Color(255, 230, 200)); // Color para gatos
-                            break;
-                        case AVE:
-                            cell.setBackground(new Color(230, 255, 200)); // Color para aves
-                            break;
-                        case HURON:
-                            cell.setBackground(new Color(108, 49, 42)); // Color para huron
-                            break;
-                        case REPTIL:
-                            cell.setBackground(new Color(255, 105, 97)); // Color para reptiles
-                            break;
-                        default:
-                            cell.setBackground(Color.WHITE); // Color por defecto
-                            break;
-                    }
-                }
 
-                // Si la fila está seleccionada, aplicar colores de selección
+                // Colores de selección y fondo
                 if (isSelected) {
                     cell.setBackground(table.getSelectionBackground());
                     cell.setForeground(table.getSelectionForeground());
                 } else {
+                    cell.setBackground(Color.WHITE);
                     cell.setForeground(Color.BLACK);
                 }
 
                 return cell;
             }
+        };
+
+        // Aplicación del renderizador centrado a las columnas de especie, edad, género y propietario
+        tablaAnimales.getColumnModel().getColumn(0).setCellRenderer(centeredRenderer); // Especie
+        tablaAnimales.getColumnModel().getColumn(1).setCellRenderer(centeredRenderer); // Edad
+        tablaAnimales.getColumnModel().getColumn(2).setCellRenderer(centeredRenderer); // Género
+        tablaAnimales.getColumnModel().getColumn(3).setCellRenderer(centeredRenderer); // Propietario
+        tablaAnimales.getColumnModel().getColumn(4).setCellRenderer(centeredRenderer); // Localidad
+
+        // Configuración del renderizador para mostrar imágenes en la columna de fotos
+        tablaAnimales.getColumnModel().getColumn(5).setCellRenderer(new TableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                if (value instanceof ImageIcon) {
+                    JLabel label = new JLabel((ImageIcon) value);
+                    label.setHorizontalAlignment(JLabel.CENTER);
+                    label.setOpaque(true);
+
+                    if (isSelected) {
+                        label.setBackground(table.getSelectionBackground());
+                    } else {
+                        label.setBackground(Color.WHITE);
+                    }
+
+                    return label;
+                } else {
+                    JLabel label = new JLabel(value == null ? "" : value.toString(), JLabel.CENTER);
+                    label.setOpaque(true);
+
+                    if (isSelected) {
+                        label.setBackground(table.getSelectionBackground());
+                        label.setForeground(table.getSelectionForeground());
+                    } else {
+                        label.setBackground(Color.WHITE);
+                        label.setForeground(Color.BLACK);
+                    }
+
+                    return label;
+                }
+            }
         });
     }
-
     /**
      * Cargar los animales en la tabla, filtrados por especie si se proporciona un filtro
      * @param especieFiltro Especie por la cual filtrar los animales (null para mostrar todos)
@@ -164,29 +228,34 @@ public class VentanaAdoptar extends JFrame {
         modeloDatosAnimales.setRowCount(0); // Limpiar los datos de la tabla
 
         for (Animal animal : listaAnimales) {
-            String fotoNombre = animal.getFotoAnimal();
-            ImageIcon fotoIcon;
+            // Verificar si el animal coincide con el filtro de especie (si se proporciona)
+            if (especieFiltro == null || animal.getEspecie() == especieFiltro) {
+                String fotoNombre = animal.getFotoAnimal();
+                ImageIcon fotoIcon;
 
-            // Intentar cargar la imagen del animal
-            if (fotoNombre == null || fotoNombre.isEmpty() || getClass().getClassLoader().getResource("imagenes/" + fotoNombre) == null) {
-                // Si no hay foto o la ruta es inválida, usa la imagen predeterminada
-                fotoIcon = new ImageIcon(getClass().getClassLoader().getResource("imagenes/logoDeustoAdopta.png"));
-            } else {
-                fotoIcon = new ImageIcon(getClass().getClassLoader().getResource("imagenes/" + fotoNombre));
+                // Intentar cargar la imagen del animal
+                if (fotoNombre == null || fotoNombre.isEmpty() || getClass().getClassLoader().getResource("imagenes/" + fotoNombre) == null) {
+                    // Si no hay foto o la ruta es inválida, usa la imagen predeterminada
+                    Image logoTemp = new ImageIcon("imagenes/logoDeustoAdopta.png").getImage();
+                    ImageIcon logo = new ImageIcon(logoTemp.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+                    fotoIcon = logo;
+                } else {
+                    fotoIcon = new ImageIcon(getClass().getClassLoader().getResource("imagenes/" + fotoNombre));
+                }
+
+                // Ajustar el tamaño de la imagen
+                Image foto = fotoIcon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+
+                // Añadir fila a la tabla
+                modeloDatosAnimales.addRow(new Object[] {
+                    animal.getEspecie(),
+                    animal.getEdad(),
+                    animal.getGenero(),
+                    animal.getPropietario(),
+                    animal.getPropietario().getComunidadAutonoma(),
+                    new ImageIcon(foto) // Mostrar la imagen en la columna correspondiente
+                });
             }
-
-            // Ajustar el tamaño de la imagen
-            Image foto = fotoIcon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
-
-            // Añadir fila a la tabla
-            modeloDatosAnimales.addRow(new Object[] {
-                animal.getEspecie(),
-                animal.getEdad(),
-                animal.getGenero(),
-                animal.getPropietario(),
-                animal.getPropietario().getComunidadAutonoma(),
-                new ImageIcon(foto) // Mostrar la imagen en la columna correspondiente
-            });
         }
 
         modeloDatosAnimales.fireTableDataChanged();

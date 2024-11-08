@@ -104,6 +104,18 @@ public class Usuario implements Comparable<Usuario>{
 			return cod +","+correoElectronico+","+contrasenia;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		boolean r = false;
+		if (obj instanceof Usuario) {
+			Usuario o = (Usuario) obj;
+			if (this.getCorreoElectronico().equals(o.getCorreoElectronico())) {
+				r = true;
+			}
+		}
+		return r;
+	}
+	
 	public int compareTo(Usuario u) {
 		if(this.cod == u.getCod()) {
 			return 0;

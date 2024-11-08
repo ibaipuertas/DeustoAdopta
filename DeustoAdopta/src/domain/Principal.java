@@ -15,7 +15,7 @@ public class Principal {
 	
 	private static ArrayList<Animal> animales = new ArrayList<>();
 	private static List<Usuario> usuarios = new ArrayList<>();
-	private static Map<Usuario, List<Animal>> adopciones = new TreeMap<>();
+	private static ArrayList<SolicitudAdopcion> solicitudAdopcion = new ArrayList<>();
 	private static Map<Usuario, List<Animal>> adoptados = new TreeMap<>();
 	private static final String nomfichUsuarios = "src/data/DataUsuarios.csv";
 	
@@ -57,12 +57,12 @@ public class Principal {
 		Principal.usuarios = usuarios;
 	}
 
-	public static Map<Usuario, List<Animal>> getAdopciones() {
-		return adopciones;
+	public static ArrayList<SolicitudAdopcion> getSolicitudesAdopcion() {
+		return solicitudAdopcion;
 	}
 
-	public static void setAdopciones(Map<Usuario, List<Animal>> adopciones) {
-		Principal.adopciones = adopciones;
+	public static void setSolicitudAdopciones(ArrayList<SolicitudAdopcion> adopciones) {
+		Principal.solicitudAdopcion = adopciones;
 	}
 
 	public static Map<Usuario, List<Animal>> getAdoptados() {
@@ -84,19 +84,10 @@ public class Principal {
 		usuarios.add(u);
 	}
 	
-	public static void anadirAdopcion(Usuario u, Animal a) {
-		if(!adopciones.containsKey(u)) {
-			adopciones.put(u, new ArrayList<>());
-		}
-		adopciones.get(u).add(a);
+	public static void anadirSolicitudAdopcion(SolicitudAdopcion sA) {
+		solicitudAdopcion.add(sA);
 	}
 	
-	public static void anadirAdoptado(Usuario u, Animal a) {
-		if(!adopciones.containsKey(u)) {
-			adopciones.put(u, new ArrayList<>());
-		}
-		adopciones.get(u).add(a);
-	}
 	
 	//METODOS PARA IMPRIMIR POR CONSOLA
 	
@@ -112,16 +103,7 @@ public class Principal {
 		}
 	}
 	
-	public static void imprimirAdopciones() {
-		for(Usuario u : adopciones.keySet()) {
-			System.out.println(u);
-			List<Animal> l = adopciones.get(u);
-			for(Animal a : l) {
-				System.out.println(a);
-			}
-			System.out.println("**********************************************");
-		}
-	}
+	
 	
 	public static void imprimirAdoptados() {
 		for(Usuario u : adoptados.keySet()) {

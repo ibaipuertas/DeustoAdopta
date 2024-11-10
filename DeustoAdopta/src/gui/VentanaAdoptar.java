@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.List;
 
 import domain.Animal;
@@ -27,7 +28,8 @@ public class VentanaAdoptar extends JFrame {
     public VentanaAdoptar(Principal principal, Usuario usuario) {
 
         // AJUSTES DEL FRAME
-        setBounds(10, 10, 900, 650);
+        //setBounds(10, 10, 900, 650);
+    	setExtendedState(JFrame.MAXIMIZED_BOTH);  // Maximiza la ventana
         setLocationRelativeTo(null);
         setResizable(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -55,6 +57,7 @@ public class VentanaAdoptar extends JFrame {
         getContentPane().add(panelIzquierdo, BorderLayout.WEST);
 
         // PANEL CENTRAL
+        //IAG - Coversacion con ChatGPT para el filtro 
         JComboBox<String> comboBoxEspecie = new JComboBox<String>();
         comboBoxEspecie.setBounds(265, 296, 94, 22);
 
@@ -103,6 +106,11 @@ public class VentanaAdoptar extends JFrame {
         JButton bCancelar = new JButton("Cancelar");
         
         JButton bConfirmar = new JButton("Adoptar");
+        bCancelar.setFont(new Font("Arial", Font.BOLD, 18)); // Aumenta el tamaño de la fuente
+        bCancelar.setPreferredSize(new Dimension(150, 50));  // Ajusta el tamaño del botón
+
+        bConfirmar.setFont(new Font("Arial", Font.BOLD, 18)); // Aumenta el tamaño de la fuente
+        bConfirmar.setPreferredSize(new Dimension(150, 50));  // Ajusta el tamaño del botón
         panelInferior.add(bCancelar);
         panelInferior.add(bConfirmar);
 
@@ -225,35 +233,29 @@ public class VentanaAdoptar extends JFrame {
      * @param especieFiltro Especie por la cual filtrar los animales (null para mostrar todos)
      */
     private void loadAnimales(Especie especieFiltro) {
-        modeloDatosAnimales.setRowCount(0); // Limpiar los datos de la tabla
+        modeloDatosAnimales.setRowCount(0);
 
         for (Animal animal : listaAnimales) {
-            // Verificar si el animal coincide con el filtro de especie (si se proporciona)
             if (especieFiltro == null || animal.getEspecie() == especieFiltro) {
                 String fotoNombre = animal.getFotoAnimal();
                 ImageIcon fotoIcon;
 
-                // Intentar cargar la imagen del animal
-                if (fotoNombre == null || fotoNombre.isEmpty() || getClass().getClassLoader().getResource("imagenes/" + fotoNombre) == null) {
-                    // Si no hay foto o la ruta es inválida, usa la imagen predeterminada
+                File fotoFile = new File("imagenes/" + fotoNombre);
+                if (fotoNombre == null || fotoNombre.isEmpty() || !fotoFile.exists()) {
                     Image logoTemp = new ImageIcon("imagenes/logoDeustoAdopta.png").getImage();
-                    ImageIcon logo = new ImageIcon(logoTemp.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-                    fotoIcon = logo;
+                    fotoIcon = new ImageIcon(logoTemp.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
                 } else {
-                    fotoIcon = new ImageIcon(getClass().getClassLoader().getResource("imagenes/" + fotoNombre));
+                    Image foto = new ImageIcon(fotoFile.getAbsolutePath()).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+                    fotoIcon = new ImageIcon(foto);
                 }
 
-                // Ajustar el tamaño de la imagen
-                Image foto = fotoIcon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
-
-                // Añadir fila a la tabla
                 modeloDatosAnimales.addRow(new Object[] {
                     animal.getEspecie(),
                     animal.getEdad(),
                     animal.getGenero(),
                     animal.getPropietario(),
                     animal.getPropietario().getComunidadAutonoma(),
-                    new ImageIcon(foto) // Mostrar la imagen en la columna correspondiente
+                    fotoIcon
                 });
             }
         }

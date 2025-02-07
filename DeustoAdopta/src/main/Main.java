@@ -25,7 +25,7 @@ public class Main {
 		//Se crea la BBDD
 		gestorBD.crearBBDD();
 		
-		//gestorBD.insertarDatosDePrueba();
+		gestorBD.insertarDatosDePrueba();
 		
 		
 		Principal principal = new Principal();

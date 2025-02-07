@@ -1,27 +1,29 @@
-package domain;
+  package domain;
 
 import java.util.ArrayList;
+import java.util.Objects;
+
+
 
 public class Usuario implements Comparable<Usuario>{
 	
-	private static int contadorUsuarios;
-	private int cod;
+
+	private int id;
 	private String correoElectronico;
 	private String contrasenia;
 	private int telefono;
 	private ComunidadAutonoma comunidadAutonoma;
 	private String direccion;
 	
-	public Usuario(String correoElectronico, String contrasenia, int telefono, ComunidadAutonoma comunidadAutonoma,
+	public Usuario(int id, String correoElectronico, String contrasenia, int telefono, ComunidadAutonoma comunidadAutonoma,
 			String direccion) {
 		
+		this.id=id;
 		this.correoElectronico = correoElectronico;
 		this.contrasenia = contrasenia;
 		this.telefono = telefono;
 		this.comunidadAutonoma = comunidadAutonoma;
 		this.direccion = direccion;
-		this.cod = contadorUsuarios;
-		contadorUsuarios  = contadorUsuarios + 1;
 	}
 	
 	public Usuario(String correoElectronico, String contrasenia) {
@@ -29,12 +31,12 @@ public class Usuario implements Comparable<Usuario>{
 		this.contrasenia = contrasenia;
 	}
 
-	public int getCod() {
-		return cod;
+	public int getId() {
+		return id;
 	}
 
-	public void setCod(int cod) {
-		this.cod = cod;
+	public void setCod(int id) {
+		this.id = id;
 	}
 
 	public String getCorreoElectronico() {
@@ -81,11 +83,6 @@ public class Usuario implements Comparable<Usuario>{
 		return correoElectronico;
 	}
 	
-	public String toStringAFichero() {
-			
-			return cod +","+correoElectronico+","+contrasenia;
-	}
-	
 	@Override
 	public boolean equals(Object obj) {
 		boolean r = false;
@@ -98,15 +95,45 @@ public class Usuario implements Comparable<Usuario>{
 		return r;
 	}
 	
+	public static Usuario parseCSV(String csvLine) {
+		Usuario u = null;
+		
+		if (csvLine != null) {
+			String[] fragmentos = csvLine.split(";");
+			//El ID es -1 por defecto
+			u = new Usuario(-1, fragmentos[1], fragmentos[2],Integer.parseInt(fragmentos[3]), ComunidadAutonoma.valueOf(fragmentos[4]),fragmentos[5]);
+		}
+		
+		return u;
+	}
+	
+	//MODIFICACIÓN 4: Convierte un Comic en una línea de texto separada por ";"
+	public static String toCSV(Usuario usuario) {		
+		if (usuario != null) {
+			return String.format("%s;%s;%d;%s;%s;%s", usuario.getCorreoElectronico(), usuario.getContrasenia(), usuario.getTelefono(), usuario.getComunidadAutonoma().name(), usuario.getDireccion());
+		}
+
+		return "";
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+	
 	public int compareTo(Usuario u) {
-		if(this.cod == u.getCod()) {
+		if(this.id == u.getId()) {
 			return 0;
 		}
-		else if (this.cod < u.getCod()) {
+		else if (this.id < u.getId()) {
 			return -1;
 		}
 		else {
 			return 1;
 		}
 	}
+	
+	
+	
+	
 }

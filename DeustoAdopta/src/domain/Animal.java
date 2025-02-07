@@ -7,8 +7,7 @@ import javax.swing.ImageIcon;
 
 public class Animal implements Comparable<Animal>{
 	
-	private static int contadorAnimales = 0;
-	private int cod;
+	private int id;
 	private String nombre;
 	private Especie especie;
 	private String raza;
@@ -17,10 +16,9 @@ public class Animal implements Comparable<Animal>{
 	private Usuario propietario;
 	private String fotoAnimal;
 	
-	public Animal(String nombre,Especie especie, String raza, int edad, Genero genero, Usuario propietario, String fotoAnimal) {
+	public Animal(int id, String nombre,Especie especie, String raza, int edad, Genero genero, String fotoAnimal,  Usuario propietario) {
 		super();
-		this.cod = contadorAnimales;
-		contadorAnimales = contadorAnimales +1;
+		this.id = id;;
 		this.nombre = nombre;
 		this.especie = especie;
 		this.raza = raza;
@@ -46,12 +44,12 @@ public class Animal implements Comparable<Animal>{
 		this.fotoAnimal = fotoAnimal;
 	}
 
-	public int getCod() {
-		return cod;
+	public int getId() {
+		return id;
 	}
 
-	public void setCod(int cod) {
-		this.cod = cod;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getNombre() {
@@ -101,8 +99,9 @@ public class Animal implements Comparable<Animal>{
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(cod, edad, especie, fotoAnimal, genero, nombre, propietario, raza);
+		return Objects.hash(id);
 	}
+	
 
 	@Override
 	public boolean equals(Object obj) {
@@ -113,14 +112,14 @@ public class Animal implements Comparable<Animal>{
 		if (getClass() != obj.getClass())
 			return false;
 		Animal other = (Animal) obj;
-		return cod == other.cod && edad == other.edad && especie == other.especie
+		return id == other.id && edad == other.edad && especie == other.especie
 				&& Objects.equals(fotoAnimal, other.fotoAnimal) && genero == other.genero
 				&& Objects.equals(nombre, other.nombre) && Objects.equals(propietario, other.propietario)
 				&& Objects.equals(raza, other.raza);
 	}
 	
 	public int compareTo(Animal a) {
-		if (this.cod == a.cod) {
+		if (this.id == a.id) {
 			return 0;
 		}
 		else return 1;

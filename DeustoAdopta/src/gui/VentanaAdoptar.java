@@ -6,10 +6,16 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+
+import db.GestorBD;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import domain.Animal;
 import domain.Especie;
@@ -24,9 +30,22 @@ public class VentanaAdoptar extends JFrame {
     private JScrollPane scrollTablaAnimales;
     private List<Animal> listaAnimales;
     private int mouseRowPersonajes = -1;
+    private GestorBD gestorBD= new GestorBD();
+    
+    private static final Map<Especie, Color> especieColores = new HashMap<>();
 
+    static {
+        especieColores.put(Especie.PERRO, Color.BLUE);
+        especieColores.put(Especie.GATO, Color.RED);
+        especieColores.put(Especie.HURON, Color.GREEN);
+        especieColores.put(Especie.AVE, Color.ORANGE);
+        especieColores.put(Especie.PEZ, Color.CYAN);
+        especieColores.put(Especie.REPTIL, Color.MAGENTA);
+        especieColores.put(Especie.ROEDOR, Color.PINK);
+    }
+    
+    
     public VentanaAdoptar(Principal principal, Usuario usuario) {
-
         // AJUSTES DEL FRAME
         //setBounds(10, 10, 900, 650);
     	setExtendedState(JFrame.MAXIMIZED_BOTH);  // Maximiza la ventana
@@ -129,7 +148,17 @@ public class VentanaAdoptar extends JFrame {
                 if (selectedRow != -1) {  // Comprobar si hay una fila seleccionada
                     // Obtener el animal correspondiente a la fila seleccionada
                     Animal animalSeleccionado = listaAnimales.get(selectedRow);
-
+                    Usuario propietario = animalSeleccionado.getPropietario();
+                    if (propietario.getId() == usuario.getId()) {
+                        JOptionPane.showMessageDialog(
+                            VentanaAdoptar.this,
+                            "No puedes adoptar a tu propio animal.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE
+                        );
+                        return;
+                    }
+                    
                     // Mostrar el mensaje de confirmación
                     int confirmacion = JOptionPane.showConfirmDialog(
                         VentanaAdoptar.this,
@@ -138,22 +167,26 @@ public class VentanaAdoptar extends JFrame {
                         JOptionPane.YES_NO_OPTION
                     );
 
-                    // Si el usuario confirma, crear la solicitud de adopción
                     if (confirmacion == JOptionPane.YES_OPTION) {
-                        Usuario propietario = animalSeleccionado.getPropietario();
-                        
-                        // Crear la solicitud de adopción
-                        SolicitudAdopcion solicitud = new SolicitudAdopcion(usuario, propietario, animalSeleccionado);
-                        
-                        // Mostrar mensaje de éxito
-                        JOptionPane.showMessageDialog(
-                            VentanaAdoptar.this,
-                            "Solicitud de adopción creada exitosamente. \nSe ha enviado solicitud a: "+animalSeleccionado.getPropietario().getCorreoElectronico(),
-                            "Éxito",
-                            JOptionPane.INFORMATION_MESSAGE
-                        );
-
-                        // Aquí puedes agregar lógica adicional para manejar la solicitud, como guardarla o procesarla
+                    	Usuario propietario2 = animalSeleccionado.getPropietario();
+                        SolicitudAdopcion solicitud = new SolicitudAdopcion(-1, usuario, propietario, animalSeleccionado,false);
+                        try {
+                            gestorBD.insertarSolicitud(solicitud);
+                            JOptionPane.showMessageDialog(
+                                VentanaAdoptar.this,
+                                "Solicitud de adopción creada exitosamente.\nSe ha enviado solicitud a: " + propietario.getCorreoElectronico(),
+                                "Éxito",
+                                JOptionPane.INFORMATION_MESSAGE
+                            );
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(
+                                VentanaAdoptar.this,
+                                "Error al guardar la solicitud en la base de datos: " + ex.getMessage(),
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE
+                            );
+                        }
                     }
                 } else {
                     // Mostrar mensaje si no se ha seleccionado ningún animal
@@ -234,32 +267,34 @@ public class VentanaAdoptar extends JFrame {
      */
     private void loadAnimales(Especie especieFiltro) {
         modeloDatosAnimales.setRowCount(0);
-
-        for (Animal animal : listaAnimales) {
-            if (especieFiltro == null || animal.getEspecie() == especieFiltro) {
-                String fotoNombre = animal.getFotoAnimal();
-                ImageIcon fotoIcon;
-
-                File fotoFile = new File("imagenes/" + fotoNombre);
-                if (fotoNombre == null || fotoNombre.isEmpty() || !fotoFile.exists()) {
-                    Image logoTemp = new ImageIcon("imagenes/logoDeustoAdopta.png").getImage();
-                    fotoIcon = new ImageIcon(logoTemp.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-                } else {
-                    Image foto = new ImageIcon(fotoFile.getAbsolutePath()).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-                    fotoIcon = new ImageIcon(foto);
+        try {
+            listaAnimales = gestorBD.getAnimales();
+            for (Animal animal : listaAnimales) {
+                if (especieFiltro == null || animal.getEspecie() == especieFiltro) {
+                    String fotoNombre = animal.getFotoAnimal();
+                    ImageIcon fotoIcon;
+                    File fotoFile = new File("imagenes/" + fotoNombre);
+                    if (fotoNombre == null || fotoNombre.isEmpty() || !fotoFile.exists()) {
+                        Image logoTemp = new ImageIcon("imagenes/logoDeustoAdopta.png").getImage();
+                        fotoIcon = new ImageIcon(logoTemp.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+                    } else {
+                        Image foto = new ImageIcon(fotoFile.getAbsolutePath()).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+                        fotoIcon = new ImageIcon(foto);
+                    }
+                    modeloDatosAnimales.addRow(new Object[] {
+                        animal.getEspecie(),
+                        animal.getEdad(),
+                        animal.getGenero(),
+                        animal.getPropietario().getCorreoElectronico(),
+                        animal.getPropietario().getComunidadAutonoma(),
+                        fotoIcon
+                    });
                 }
-
-                modeloDatosAnimales.addRow(new Object[] {
-                    animal.getEspecie(),
-                    animal.getEdad(),
-                    animal.getGenero(),
-                    animal.getPropietario(),
-                    animal.getPropietario().getComunidadAutonoma(),
-                    fotoIcon
-                });
             }
+            modeloDatosAnimales.fireTableDataChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar los datos de la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
         }
-
-        modeloDatosAnimales.fireTableDataChanged();
     }
-}
+    }

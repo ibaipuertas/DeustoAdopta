@@ -97,26 +97,19 @@ public class Principal {
 	}
 	
 	
-	//METODO PARA BUSCAR USUARIO
-	public static Usuario buscarUsuario(String correo) {
-		boolean enc = false;
-		int pos = 0;
-		Usuario u = null;
-		while(!enc && pos<usuarios.size()) {
-			u = usuarios.get(pos);
-			if(u.getCorreoElectronico().equals(correo)) {
-				enc = true;
-			}else {
-				pos++;
-			}
-		}
-		if(enc) {
-			return u;
-		}else{
-			return null;
-		}
+	//METODO RECURSIVO PARA BUSCAR USUARIO
+	public static Usuario buscarUsuarioRecursivo(String correo, int pos) {
+	    if (pos >= usuarios.size()) {
+	        return null; // Caso base: si se llega al final de la lista y no se encontró el usuario
+	    }
+
+	    Usuario u = usuarios.get(pos);
+	    if (u.getCorreoElectronico().equals(correo)) {
+	        return u; // Caso base: se encontró el usuario
+	    }
+
+	    return buscarUsuarioRecursivo(correo, pos + 1); // Llamada recursiva con la siguiente posición
 	}
-	
 	
 	//METODOS PARA CARGAR Y GUARDAR EN FICHERO
 	
@@ -143,7 +136,7 @@ public class Principal {
 				String correo = partes[0];
 				String con = partes[1];
 				Usuario u = new Usuario(correo, con);
-				if(buscarUsuario(correo)==null)
+				if(buscarUsuarioRecursivo(correo,0)==null)
 					usuarios.add(u);
 			}
 			sc.close();

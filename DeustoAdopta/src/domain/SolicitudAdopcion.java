@@ -1,18 +1,19 @@
 package domain;
 
 public class SolicitudAdopcion {
-	private static long cod;
+	private int id;
 	private Usuario usuarioSolicitante;
 	private Usuario usuarioSolicitado;
 	private Animal animal;
 	private Boolean estado;
 	
-	public SolicitudAdopcion(Usuario usuarioSolicitante, Usuario usuarioSolicitado, Animal animal) {
+	public SolicitudAdopcion(int id, Usuario usuarioSolicitante, Usuario usuarioSolicitado, Animal animal,Boolean estado) {
 		super();
+		this.id=id;
 		this.usuarioSolicitante = usuarioSolicitante;
 		this.usuarioSolicitado = usuarioSolicitado;
 		this.animal = animal;
-		this.estado = false;
+		this.estado = estado;
 	}
 
 	public Boolean getEstado() {
@@ -23,12 +24,14 @@ public class SolicitudAdopcion {
 		this.estado = estado;
 	}
 
-	public static long getCod() {
-		return cod;
+
+
+	public int getId() {
+		return id;
 	}
 
-	public static void setCod(long cod) {
-		SolicitudAdopcion.cod = cod;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public Usuario getUsuarioSolicitante() {

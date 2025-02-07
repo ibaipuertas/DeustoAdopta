@@ -111,7 +111,7 @@ public class VentanaRegistro11 extends JFrame{
 			String dni = tfDni.getText();
 			String correo = tfCorreo.getText();
 			Usuario u = new Usuario(correo,con);
-			if(Principal.buscarUsuario(correo)!=null) {
+			if(Principal.buscarUsuarioRecursivo(correo,0)!=null) {
 				JOptionPane.showConfirmDialog(null, "Ya existe un cliente con este correo", "ERROR", JOptionPane.ERROR_MESSAGE);
 			}else {
 				Principal.anadirUsuario(u);
